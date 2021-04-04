@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+
+<body>
+  <form name="myform" onSubmit="return handleClick()">
+      <input type="text" id="openingMoves" placeholder="Input some chess moves&hellip;">
+      <input name="Submit"  type="submit" value="Go" >
+  </form>
+
+  <div id='main'></div>
+  <script>
+    // Code from http://bl.ocks.org/eesur/9910343
+    function handleClick(event){
+        console.log(document.getElementById("openingMoves").value);
+        analyze(document.getElementById("openingMoves").value);
+        return false;
+    }
+
+    function analyze(val) {
+      console.log("ANALYZE");
+      d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgoodisyourchessopening/main/2021-02-cleaned_100000.csv", d3.autoType).then(function(data) {
+
+        document.getElementById('main').append(val);
+
+        var openingData = data.filter(d => d.Moves.startsWith(val));
+        console.log(openingData);
+
+        var elos = new Array(openingData.length);
+
+        for (var i=0; i < openingData.length; i++) {
+          elos[i] = openingData[i].WhiteElo;
+        }
+        console.log(elos);
+        bins = d3.bin().thresholds(40)(elos);
+        console.log(bins);
+
+        color = "steelblue";
+        height = 200;
+        width = 500;
+        margin = ({top: 20, right: 20, bottom: 30, left: 40});
+        const svg = d3.create("svg")
+        .attr("viewBox", [0, 0, width, height]);
+
+        x = d3.scaleLinear()
+            .domain([bins[0].x0, bins[bins.length - 1].x1])
+            .range([margin.left, width - margin.right])
+
+        y = d3.scaleLinear()
+            .domain([0, d3.max(bins, d => d.length)]).nice()
+            .range([height - margin.bottom, margin.top])
+
+        xAxis = g => g
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+            .call(d3.axisBottom(x).ticks(width / 80 ).tickSizeOuter(0))
+            .call(g => g.append("text")
+                .attr("x", width - margin.right)
+                .attr("y", -4)
+                .attr("fill", "currentColor")
+                .attr("font-weight", "bold")
+                .attr("text-anchor", "end")
+                .text(data.x))
+
+        yAxis = g => g
+            .attr("transform", `translate(${margin.left},0)`)
+            .call(d3.axisLeft(y).ticks(height / 40))
+            .call(g => g.select(".domain").remove())
+            .call(g => g.select(".tick:last-of-type text").clone()
+                .attr("x", 4)
+                .attr("text-anchor", "start")
+                .attr("font-weight", "bold")
+                .text(data.y))
+
+
+        svg.append("g")
+            .attr("fill", color)
+            .selectAll("rect")
+            .data(bins)
+            .join("rect")
+              .attr("x", d => x(d.x0) + 1)
+              .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
+              .attr("y", d => y(d.length))
+              .attr("height", d => y(0) - y(d.length));
+
+        svg.append("g")
+            .call(xAxis);
+
+        svg.append("g")
+            .call(yAxis);
+
+        document.getElementById('main').append(svg.node());
+      });
+    }
+  </script>
+</body>
