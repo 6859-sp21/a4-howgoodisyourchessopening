@@ -103,7 +103,7 @@
 
         y = d3.scaleLinear()
             // .domain([0, d3.max(bins, d => getWinRate(d))]).nice()
-            .domain([-1, 1]).nice()
+            .domain([0, 1]).nice()
             .range([height - margin.bottom, margin.top])
 
         // line = d3.line()
@@ -112,7 +112,7 @@
         //     .y(d => y(d[1]));
 
         xAxis = g => g
-            .attr("transform", `translate(0,${height/2 - margin.bottom/2 + margin.top/2})`)
+            .attr("transform", `translate(0,${height-margin.bottom})`)
             .call(d3.axisBottom(x).ticks(width / 80 ).tickSizeOuter(0))
             .call(g => g.append("text")
                 .attr("x", width - margin.right)
@@ -134,7 +134,7 @@
 
         colorWin = "ForestGreen";
         colorDraw = "LightSkyBlue";
-        colorLose = "FireBrick";
+        // colorLose = "FireBrick";
 
         svg.append("g")
             .attr("fill", colorWin)
@@ -143,7 +143,7 @@
             .join("rect")
               .attr("x", d => x(d.x0) + 1)
               .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
-              .attr("y", d => y(getWinRate(d)+getDrawRate(d)/2))
+              .attr("y", d => y(getWinRate(d)+getDrawRate(d)))
               .attr("height", d => y(0) - y(getWinRate(d)));
 
         svg.append("g")
@@ -153,18 +153,18 @@
             .join("rect")
               .attr("x", d => x(d.x0) + 1)
               .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
-              .attr("y", d => y(getDrawRate(d)/2))
+              .attr("y", d => y(getDrawRate(d)))
               .attr("height", d => y(0) - y(getDrawRate(d)));
 
-        svg.append("g")
-            .attr("fill", colorLose)
-            .selectAll("rect")
-            .data(bins)
-            .join("rect")
-              .attr("x", d => x(d.x0) + 1)
-              .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
-              .attr("y", d => y(-getDrawRate(d)/2))
-              .attr("height", d => y(0) - y(getLoseRate(d)));
+        // svg.append("g")
+        //     .attr("fill", colorLose)
+        //     .selectAll("rect")
+        //     .data(bins)
+        //     .join("rect")
+        //       .attr("x", d => x(d.x0) + 1)
+        //       .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
+        //       .attr("y", d => y(-getDrawRate(d)/2))
+        //       .attr("height", d => y(0) - y(getLoseRate(d)));
 
 
         svg.append("g")
