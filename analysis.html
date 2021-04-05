@@ -11,7 +11,14 @@
       <input name="Submit"  type="submit" value="Go" >
   </form>
 
-  <div id='main'><svg id='analysis'></svg></div>
+  <div id='main'>
+    <svg id='analysis'>
+      <g id='draws'></g>
+      <g id='wins'></g>
+      <g id='xAxis'></g>
+      <g id='yAxis'></g>
+    </svg>
+  </div>
   <script>
     // Code from http://bl.ocks.org/eesur/9910343
     function handleClick(event){
@@ -135,11 +142,13 @@
         colorWin = "ForestGreen";
         colorDraw = "LightSkyBlue";
 
-        svg.append("g")
+        svg.select("#wins")
             .attr("fill", colorWin)
             .selectAll("rect")
             .data(bins)
             .join("rect")
+              .transition()
+              .duration(200)
               .attr("x", d => x(d.x0) + 1)
               .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
               .attr("y", d => y(0))
@@ -151,11 +160,13 @@
               .delay(function(d,i){console.log(i) ; return(100)});
 ;
 
-        svg.append("g")
+        svg.select("#draws")
             .attr("fill", colorDraw)
             .selectAll("rect")
             .data(bins)
             .join("rect")
+              .transition()
+              .duration(200)
               .attr("x", d => x(d.x0) + 1)
               .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
               .attr("y", d => y(0))
@@ -166,10 +177,10 @@
               .attr("height", d => y(0) - y(getDrawRate(d)))
               .delay(function(d,i){console.log(i) ; return(100)});
 
-        svg.append("g")
+        svg.select("#xAxis")
             .call(xAxis);
 
-        svg.append("g")
+        svg.select("#yAxis")
             .call(yAxis);
 
         // svg.selectAll("rect")
