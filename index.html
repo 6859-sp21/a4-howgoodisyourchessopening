@@ -16,16 +16,30 @@
 		<script defer src="js/chess.js"></script>
 	  
 
+	    <script src="https://d3js.org/d3.v6.min.js"></script>
+
 
   	</head>
 	<body>
-		<div id="myBoard" style="width: 400px"></div>
+		<h1>Your Check Mate</h1>
+		<h2>How Good is Your Chess Opening?</h2>
+		<p>Using game data provided by lichess.com, you can see the win/draw rate by rating for certain opening moves!</p>
+		<div id="myBoard" style="width: 500px"></div>
 		<label>Status:</label>
 		<div id="status"></div>
 		<label>FEN:</label>
 		<div id="fen"></div>
 		<label>PGN:</label>
 		<div id="pgn"></div>
+		<div id='win-graph' style="width: 1000px">
+			<svg id='analysis'>
+		    	<g id='draws'></g>
+		    	<g id='wins'></g>
+		    	<g id='xAxis'></g>
+		    	<g id='yAxis'></g>
+		    </svg>
+		</div>
+		<div id='Total # of Games'></div>
   	</body>
   
 	<script defer src="./script.js"></script>
