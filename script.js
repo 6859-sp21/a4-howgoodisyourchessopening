@@ -36,7 +36,7 @@ function onDrop (source, target) {
   var move = game.move({
     from: source,
     to: target,
-    promotion: 'q' 
+    promotion: 'q'
   })
 
   // illegal move
@@ -94,6 +94,7 @@ function handleClick(event){
     return false;
 }
 
+<<<<<<< HEAD
 
 
 function getMostCommonMove(data, pgn) {
@@ -129,13 +130,16 @@ function getMostCommonMove(data, pgn) {
 }
 
 
+var div = d3.select("#win-graph").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
 function analyze(val) {
   console.log("ANALYZE");
   // d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgoodisyourchessopening/main/2021-02-cleaned_1000000.csv", d3.autoType).then(function(data) {
   master_data.then(function(data) {
     // document.getElementById('main').append(val);
     console.log(data.length)
-
     var openingData = data.filter(d => d.Moves.startsWith(val));
 
     // common_move = getMostCommonMove(openingData, val) 
@@ -158,13 +162,15 @@ function analyze(val) {
       .attr("viewBox", [0, 0, width, height]);
 
     x = d3.scaleLinear()
-      .domain([500,3200])
-      // .domain(d3.extent(elos)).nice()
+      .domain([500, 3200]).nice()
       // .domain([bins[0].x0, bins[bins.length - 1].x1])
       .range([margin.left, width - margin.right])
 
 
     function getWinRate(d) {
+      if (d.length === 0) {
+        return 0;
+      }
       var wins = 0;
       for (var i = 0; i < d.length; i++) {
         if (d[i].Result === "1-0") {
@@ -176,6 +182,9 @@ function analyze(val) {
 
 
     function getDrawRate(d) {
+      if (d.length === 0) {
+        return 0;
+      }
       var draws = 0;
       for (var i = 0; i < d.length; i++) {
         if (d[i].Result === "1/2-1/2") {
@@ -184,23 +193,13 @@ function analyze(val) {
       }
       return 1.0*draws/d.length;
     }
-    
-    function getLoseRate(d) {
-      var losses = 0;
-      for (var i = 0; i < d.length; i++) {
-        if (d[i].Result === "0-1") {
-          losses++;
-        }
-      }
-      return 1.0*losses/d.length;
-    }
 
-    thresholds = x.ticks(40)
+    thresholds = x.ticks(20)
     bins = d3.histogram()
       .value(d => d.WhiteElo)
       .domain(x.domain())
       .thresholds(thresholds)(openingData);
-          // console.log(bins);
+    // console.log(bins);
 
           // KDE code from https://observablehq.com/@d3/kernel-density-estimation
           // function kde(kernel, thresholds, data) {
@@ -234,7 +233,7 @@ function analyze(val) {
         .attr("fill", "currentColor")
         .attr("font-weight", "bold")
         .attr("text-anchor", "end")
-        .text(data.x))
+        .text("Rating"))
 
     yAxis = g => g
       .attr("transform", `translate(${margin.left},0)`)
@@ -244,51 +243,73 @@ function analyze(val) {
         .attr("x", 4)
         .attr("text-anchor", "start")
         .attr("font-weight", "bold")
-        .text(data.y))
+        .text("Win/Draw Rate"))
 
     colorWin = "ForestGreen";
     colorDraw = "LightSkyBlue";
 
-    svg.select("#wins")
+    wins = svg.select("#wins")
       .attr("fill", colorWin)
       .selectAll("rect")
       .data(bins)
-      .join("rect")
-        .transition()
-        .duration(200)
+      .join("rect");
+
+    wins.transition()
+        .duration(400)
           .attr("x", d => x(d.x0) + 1)
           .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
-          .attr("y", d => y(0))
-          .attr("height", d => 0)
-          .transition()
-          .duration(800)
           .attr("y", d => y(getWinRate(d)+getDrawRate(d)))
           .attr("height", d => y(0) - y(getWinRate(d)))
           .delay(function(d,i){
-                  // console.log(i) ; 
             return(100)
           });
 
-
-    svg.select("#draws")
+    draws = svg.select("#draws")
         .attr("fill", colorDraw)
         .selectAll("rect")
         .data(bins)
         .join("rect")
-          .transition()
-          .duration(200)
+
+    draws.transition()
+          .duration(400)
           .attr("x", d => x(d.x0) + 1)
           .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
-          .attr("y", d => y(0))
-          .attr("height", d => 0)
-          .transition()
-          .duration(800)
           .attr("y", d => y(getDrawRate(d)))
           .attr("height", d => y(0) - y(getDrawRate(d)))
           .delay(function(d,i){
-            // console.log(i) ; 
+            // console.log(i) ;
             return(100)
           });
+
+    // Create outlines
+    outlines = svg.select("#outlines")
+      .attr("fill-opacity", 0)
+      .attr('stroke', 'black').attr('stroke-width', 1)
+      .attr('stroke-opacity', 0)
+      .selectAll("rect")
+      .data(bins)
+      .join("rect");
+
+    outlines.attr("x", d => x(d.x0) + 1)
+      .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
+      .attr("y", d => y(getWinRate(d)+getDrawRate(d)))
+      .attr("height", d => y(0) - y(getWinRate(d)+getDrawRate(d)));
+
+    outlines.on("mouseover", function(event, d) {
+          d3.select(this).attr('stroke-opacity', 2);
+          div.transition()
+              .duration(200)
+              .style("opacity", .9);
+          div.html("Number of games: " + d.length + "<br>" + "Wins: " + (getWinRate(d)*100).toFixed(1) + "%" + "<br>" + "Draws: " + (getDrawRate(d)*100).toFixed(1) + "%")
+            .style("left", (event.pageX) + "px")
+            .style("top", (event.pageY - 28) + "px");
+          })
+      .on("mouseout", function(event, d) {
+          d3.select(this).attr('stroke-opacity', 0);
+          div.transition()
+              .duration(500)
+              .style("opacity", 0);
+      });
 
     svg.select("#xAxis")
       .call(xAxis);
