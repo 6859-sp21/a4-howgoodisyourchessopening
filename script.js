@@ -7,6 +7,8 @@ var $games = $('#games')
 var master_data = d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgoodisyourchessopening/main/2021-02-cleaned_1000000.csv", d3.autoType)
 var search_data = master_data
 
+var common_move = null
+
 $('#startBtn').on('click', function() {reset()})
 
 function reset() {
@@ -80,7 +82,7 @@ function updateStatus () {
   $status.html(status)
   $fen.html(game.fen())
   $pgn.html(game.pgn())
-  // console.log(game.pgn())
+  console.log(game.pgn())
   analyze(game.pgn())
 
 
@@ -92,16 +94,56 @@ function handleClick(event){
     return false;
 }
 
+
+
+function getMostCommonMove(data, pgn) {
+  var modeMap = {};
+  var move = pgn
+  var maxEl = data[0], maxCount = 1;
+  for (var i=0; i < data.length; i++) {
+    var game_pgn = data[i].Moves.slice(pgn.length, pgn.length+10)
+    var first_space = game_pgn.indexOf(" ")
+    if (!isNaN(game_pgn[0])) {
+      var move_pgn = game_pgn.substring(first_space+1)
+      var second_space = move_pgn.indexOf(" ")
+      move += game_pgn.substring(0, second_space+1)
+    } else {
+      move += game_pgn.substring(0, first_space+1)
+    }
+
+    if(modeMap[move] == null) {
+      modeMap[move] = 1;
+    }
+    else {
+        modeMap[move]++;  
+    }
+    if(modeMap[move] > maxCount)
+    {
+        maxEl = move;
+        maxCount = modeMap[move];
+    }
+
+  }
+  console.log(maxEl)
+  return maxEl
+}
+
+
 function analyze(val) {
   console.log("ANALYZE");
   // d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgoodisyourchessopening/main/2021-02-cleaned_1000000.csv", d3.autoType).then(function(data) {
   master_data.then(function(data) {
     // document.getElementById('main').append(val);
+    console.log(data.length)
 
     var openingData = data.filter(d => d.Moves.startsWith(val));
-    // console.log(openingData);
 
-    $games.html(openingData.length)
+    // common_move = getMostCommonMove(openingData, val) 
+
+    // console.log(openingData);
+    var proportion = (openingData.length/data.length*100).toFixed(3)
+
+    $games.html(String(openingData.length) + "  (" + String(proportion) + "%)") 
     var elos = new Array(openingData.length);
     for (var i=0; i < openingData.length; i++) {
       elos[i] = openingData[i].WhiteElo;
@@ -116,7 +158,8 @@ function analyze(val) {
       .attr("viewBox", [0, 0, width, height]);
 
     x = d3.scaleLinear()
-      .domain(d3.extent(elos)).nice()
+      .domain([500,3200])
+      // .domain(d3.extent(elos)).nice()
       // .domain([bins[0].x0, bins[bins.length - 1].x1])
       .range([margin.left, width - margin.right])
 

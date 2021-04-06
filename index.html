@@ -4,6 +4,10 @@
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 		<meta content="utf-8" http-equiv="encoding">
 
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="css/main.css">
+
+        
 		<link rel="stylesheet"
 		      href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css"
 		      integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU"
@@ -28,7 +32,7 @@
 		<h2>How Good is Your Chess Opening?</h2>
 		<p>Using game data provided by lichess.com, you can see the win/draw rate by rating for certain opening moves!</p>
 		<div id="myBoard" style="width: 500px"></div>
-		<button class="btn btn-primary" id="startBtn">Start Position</button>
+		<div id='reset-button' ><button class="btn btn-primary" id="startBtn">Start Position</button></div>
 		<label>Status:</label>
 		<div id="status"></div>
 		<label>FEN:</label>
@@ -45,6 +49,7 @@
 		</div>
 		<label>Total Games:</label>
 		<div id="games"></div>
+		
 
   	</body>
   
