@@ -206,8 +206,6 @@ function analyze(val) {
     colorWin = "ForestGreen";
     colorDraw = "LightSkyBlue";
 
-
-
     wins = svg.select("#wins")
       .attr("fill", colorWin)
       .selectAll("rect")
@@ -240,22 +238,6 @@ function analyze(val) {
             // console.log(i) ;
             return(100)
           });
-    // draws.on("mouseover", function(event, d) {
-    //           console.log(d3.select(this));
-    //           d3.select(this).attr('stroke', 'black').attr('stroke-width', 1);
-    //           div.transition()
-    //               .duration(200)
-    //               .style("opacity", .9);
-    //           div.html("TEST")
-    //             .style("left", (event.pageX) + "px")
-    //             .style("top", (event.pageY - 28) + "px");
-    //           })
-    //       .on("mouseout", function(event, d) {
-    //           d3.select(this).attr('stroke', 'none');
-    //           div.transition()
-    //               .duration(500)
-    //               .style("opacity", 0);
-    //       });
 
     // Create outlines
     outlines = svg.select("#outlines")
@@ -272,7 +254,6 @@ function analyze(val) {
       .attr("height", d => y(0) - y(getWinRate(d)+getDrawRate(d)));
 
     outlines.on("mouseover", function(event, d) {
-          console.log(d3.select(this));
           d3.select(this).attr('stroke-opacity', 2);
           div.transition()
               .duration(200)
