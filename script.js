@@ -4,18 +4,19 @@ var $status = $('#status')
 var $fen = $('#fen')
 var $pgn = $('#pgn')
 var $games = $('#games')
+var num_games = 1
+$games.html("0/0" + "  (" + "0.00" + "%)") 
 var master_data = d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgoodisyourchessopening/main/2021-02-cleaned_1000000.csv", d3.autoType)
-var search_data = master_data
 
 var common_move = null
 
 $('#startBtn').on('click', function() {reset()})
 
 function reset() {
-    console.log("RESET!!")
+    // console.log("RESET!!")
     game.reset()
     board.start(false)
-    search_data = master_data
+    num_games = 1
     updateStatus()
 }
 
@@ -52,6 +53,7 @@ function onSnapEnd () {
 }
 
 function updateStatus () {
+  analyze(game.pgn())
   var status = ''
 
   var moveColor = 'White'
@@ -71,7 +73,13 @@ function updateStatus () {
 
   // game still on
   else {
-    status = moveColor + ' to move'
+    // console.log(num_games)
+    prefix = "Make a move! ("
+    if (num_games === 0) {
+      prefix = "No Available Game Data ("
+    }
+
+    status = prefix + moveColor + ' to move)'
 
     // check?
     if (game.in_check()) {
@@ -82,8 +90,8 @@ function updateStatus () {
   $status.html(status)
   $fen.html(game.fen())
   $pgn.html(game.pgn())
-  console.log(game.pgn())
-  analyze(game.pgn())
+  // console.log(game.pgn())
+  // analyze(game.pgn())
 
 
 }
@@ -93,8 +101,6 @@ function handleClick(event){
     analyze(document.getElementById("openingMoves").value);
     return false;
 }
-
-<<<<<<< HEAD
 
 
 function getMostCommonMove(data, pgn) {
@@ -135,12 +141,14 @@ var div = d3.select("#win-graph").append("div")
     .style("opacity", 0);
 
 function analyze(val) {
-  console.log("ANALYZE");
+  // console.log("ANALYZE");
   // d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgoodisyourchessopening/main/2021-02-cleaned_1000000.csv", d3.autoType).then(function(data) {
   master_data.then(function(data) {
     // document.getElementById('main').append(val);
-    console.log(data.length)
+    // console.log(data.length)
     var openingData = data.filter(d => d.Moves.startsWith(val));
+    num_games = openingData.length
+    // console.log(num_games)
 
     // common_move = getMostCommonMove(openingData, val) 
 
@@ -154,7 +162,7 @@ function analyze(val) {
     }
     // console.log(elos);
     // Formatting parameters
-    height = 200;
+    height = 250;
     width = 500;
     margin = ({top: 20, right: 20, bottom: 30, left: 40});
 

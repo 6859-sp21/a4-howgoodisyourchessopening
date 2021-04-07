@@ -6,10 +6,8 @@
 
         <!-- Custom CSS -->
         <link rel="stylesheet" href="css/main.css">
+		<link rel="stylesheet" href="css/style.css">
 
-        
-		<link rel="stylesheet"
-		      href="css/style.css"">
 		<link rel="stylesheet"
 		      href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css"
 		      integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU"
@@ -32,28 +30,37 @@
 	<body>
 		<h1>Your Check Mate</h1>
 		<h2>How Good is Your Chess Opening?</h2>
-		<p>Using game data provided by lichess.com, you can see the win/draw rate by rating for certain opening moves!</p>
-		<div id="myBoard" style="width: 500px"></div>
-		<div id='reset-button' ><button class="btn btn-primary" id="startBtn">Start Position</button></div>
-		<label>Status:</label>
-		<div id="status"></div>
-		<label>FEN:</label>
-		<div id="fen"></div>
-		<label>PGN:</label>
-		<div id="pgn"></div>
-		<div id='win-graph' style="width: 1000px">
-			<svg id='analysis'>
-		    	<g id='draws'></g>
-		    	<g id='wins'></g>
-		    	<g id='xAxis'></g>
-		    	<g id='yAxis'></g>
-					<g id='outlines'></g>
-		    </svg>
+		<h3>Check out the win/draw rate by ranking for opening chess moves from <a href="https://database.lichess.org/" target="_blank">lichess.com</a>  game data!</h3>
+		<div class="visual-container">
+			<div class="board-container">
+				<!-- <label>Status:</label> -->
+				<div id="status"></div>
+				<div id="myBoard"></div>
+				<div id='reset-button' ><button class="btn btn-primary" id="startBtn">Start Position</button></div>
+			</div>
+			<div class="graph-container">
+				<div class="graph-title"><h4>Outcomes for Chess Opening/PGN by Rating (for White)</h4></div>
+				<div class="pgn-string">
+					<label>PGN: </label>
+					<div id="pgn"></div>
+				</div>
+				<div id='win-graph'>
+					<svg id='analysis'>
+				    	<g id='draws'></g>
+				    	<g id='wins'></g>
+				    	<g id='xAxis'></g>
+				    	<g id='yAxis'></g>
+							<g id='outlines'></g>
+				    </svg>
+				</div>
+				<div class ="total-games">
+					<label>Total Games:  </label>
+					<div id="games"></div>
+				</div>
+			</div>
 		</div>
-		<label>Total Games:</label>
-		<div id="games"></div>
-		
-
+<!-- 		<label>FEN:</label>
+		<div id="fen"></div> -->
   	</body>
 
 	<script defer src="./script.js"></script>
