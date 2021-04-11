@@ -20,3 +20,7 @@ div.tooltip {
 #draws {
   pointer-events: none;
 }
+
+.rating-description {
+  font-size: 10px;
+}

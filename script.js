@@ -5,7 +5,7 @@ var $fen = $('#fen')
 var $pgn = $('#pgn')
 var $games = $('#games')
 var num_games = 1
-$games.html("0/0" + "  (" + "0.00" + "%)") 
+$games.html("0/0" + "  (" + "0.00" + "%)")
 var master_data = d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgoodisyourchessopening/main/2021-02-cleaned_1000000.csv", d3.autoType)
 
 var common_move = null
@@ -122,7 +122,7 @@ function getMostCommonMove(data, pgn) {
       modeMap[move] = 1;
     }
     else {
-        modeMap[move]++;  
+        modeMap[move]++;
     }
     if(modeMap[move] > maxCount)
     {
@@ -140,6 +140,15 @@ var div = d3.select("#win-graph").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
+
+const colorWin = "ForestGreen";
+const colorDraw = "LightSkyBlue";
+svg = d3.select("#analysis");
+svg.append("rect").attr("x", 390).attr("y", 14).attr("width",20).attr("height",13).style("fill", colorWin)
+svg.append("rect").attr("x", 390).attr("y", 34).attr("width",20).attr("height",13).style("fill", colorDraw)
+svg.append("text").attr("x", 420).attr("y", 20).text("% Wins").style("font-size", "11px").attr("alignment-baseline","middle")
+svg.append("text").attr("x", 420).attr("y", 40).text("% Draws").style("font-size", "11px").attr("alignment-baseline","middle")
+
 function analyze(val) {
   // console.log("ANALYZE");
   // d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgoodisyourchessopening/main/2021-02-cleaned_1000000.csv", d3.autoType).then(function(data) {
@@ -150,21 +159,21 @@ function analyze(val) {
     num_games = openingData.length
     // console.log(num_games)
 
-    // common_move = getMostCommonMove(openingData, val) 
+    // common_move = getMostCommonMove(openingData, val)
 
     // console.log(openingData);
     var proportion = (openingData.length/data.length*100).toFixed(3)
 
-    $games.html(String(openingData.length) + "  (" + String(proportion) + "%)") 
+    $games.html(String(openingData.length) + "  (" + String(proportion) + "%)")
     var elos = new Array(openingData.length);
     for (var i=0; i < openingData.length; i++) {
       elos[i] = openingData[i].WhiteElo;
     }
     // console.log(elos);
     // Formatting parameters
-    height = 250;
+    height = 270;
     width = 500;
-    margin = ({top: 20, right: 20, bottom: 30, left: 40});
+    margin = ({top: 20, right: 20, bottom: 60, left: 40});
 
     const svg = d3.select("#analysis")
       .attr("viewBox", [0, 0, width, height]);
@@ -185,7 +194,7 @@ function analyze(val) {
           wins++;
         }
       }
-      return 1.0*wins/d.length;
+      return 100.0*wins/d.length;
     }
 
 
@@ -199,7 +208,7 @@ function analyze(val) {
           draws++;
         }
       }
-      return 1.0*draws/d.length;
+      return 100.0*draws/d.length;
     }
 
     thresholds = x.ticks(20)
@@ -224,7 +233,7 @@ function analyze(val) {
 
     y = d3.scaleLinear()
       // .domain([0, d3.max(bins, d => getWinRate(d))]).nice()
-      .domain([0, 1]).nice()
+      .domain([0, 100]).nice()
       .range([height - margin.bottom, margin.top])
 
     // line = d3.line()
@@ -251,10 +260,7 @@ function analyze(val) {
         .attr("x", 4)
         .attr("text-anchor", "start")
         .attr("font-weight", "bold")
-        .text("Win/Draw Rate"))
-
-    colorWin = "ForestGreen";
-    colorDraw = "LightSkyBlue";
+        .text("Win/Draw Rate (%)"))
 
     wins = svg.select("#wins")
       .attr("fill", colorWin)
@@ -308,7 +314,7 @@ function analyze(val) {
           div.transition()
               .duration(200)
               .style("opacity", .9);
-          div.html("Number of games: " + d.length + "<br>" + "Wins: " + (getWinRate(d)*100).toFixed(1) + "%" + "<br>" + "Draws: " + (getDrawRate(d)*100).toFixed(1) + "%")
+          div.html("Number of games: " + d.length + "<br>" + "Wins: " + (getWinRate(d)).toFixed(1) + "%" + "<br>" + "Draws: " + (getDrawRate(d)).toFixed(1) + "%")
             .style("left", (event.pageX) + "px")
             .style("top", (event.pageY - 28) + "px");
           })
@@ -324,6 +330,8 @@ function analyze(val) {
 
     svg.select("#yAxis")
       .call(yAxis);
+
+
   });
 }
 
