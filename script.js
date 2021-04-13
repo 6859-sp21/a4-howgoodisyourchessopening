@@ -8,16 +8,29 @@ var num_games = 1
 $games.html("0/0" + "  (" + "0.00" + "%)")
 var master_data = d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgoodisyourchessopening/main/2021-02-cleaned_1000000.csv", d3.autoType)
 
-var common_move = null
+var common_move = getMostCommonMove(master_data, "")
 
 $('#startBtn').on('click', function() {reset()})
 
 function reset() {
-    // console.log("RESET!!")
-    game.reset()
-    board.start(false)
-    num_games = 1
-    updateStatus()
+  // console.log("RESET!!")
+  game.reset()
+  board.start(false)
+  num_games = 1
+  updateStatus()
+}
+
+$('#commonBtn').on('click', function() {doMostCommon()})
+
+function doMostCommon() {
+  console.log("COMMON:", common_move, common_move.length)
+  var move = game.move(common_move)
+  if (move === null) {
+    game.move('e5')
+  }
+  console.log(move)
+  onSnapEnd()
+  updateStatus()
 }
 
 function onDragStart (source, piece, position, orientation) {
@@ -105,33 +118,40 @@ function handleClick(event){
 
 function getMostCommonMove(data, pgn) {
   var modeMap = {};
-  var move = pgn
-  var maxEl = data[0], maxCount = 1;
+  var maxEl = data[0], maxCount = 0;
+  // console.log(pgn)
   for (var i=0; i < data.length; i++) {
-    var game_pgn = data[i].Moves.slice(pgn.length, pgn.length+10)
-    var first_space = game_pgn.indexOf(" ")
-    if (!isNaN(game_pgn[0])) {
-      var move_pgn = game_pgn.substring(first_space+1)
-      var second_space = move_pgn.indexOf(" ")
-      move += game_pgn.substring(0, second_space+1)
-    } else {
-      move += game_pgn.substring(0, first_space+1)
+    var move = pgn
+    var offset = 0
+    if (move.length > 0) {
+      offset = 1
     }
-
-    if(modeMap[move] == null) {
-      modeMap[move] = 1;
+    var game_pgn = data[i].Moves.slice(pgn.length+offset, pgn.length+10)
+    // console.log(game_pgn)
+    var first_space = game_pgn.indexOf(" ")
+    var next_move = game_pgn.substring(0, first_space)
+    if (next_move.includes(".")) {
+      // console.log("NO NUT")
+      var move_pgn = game_pgn.substring(first_space+1)
+      // console.log(move_pgn)
+      var second_space = move_pgn.indexOf(" ")
+      next_move = game_pgn.substring(first_space+1, first_space + second_space+1)
+    }
+    move += " " + next_move
+    if(modeMap[next_move] == null) {
+      modeMap[next_move] = 1;
     }
     else {
-        modeMap[move]++;
+        modeMap[next_move]++;
     }
-    if(modeMap[move] > maxCount)
+    if(modeMap[next_move] > maxCount)
     {
-        maxEl = move;
-        maxCount = modeMap[move];
+        maxEl = next_move;
+        maxCount = modeMap[next_move];
     }
 
   }
-  console.log(maxEl)
+  // console.log(maxEl)
   return maxEl
 }
 
@@ -159,7 +179,7 @@ function analyze(val) {
     num_games = openingData.length
     // console.log(num_games)
 
-    // common_move = getMostCommonMove(openingData, val)
+    common_move = getMostCommonMove(openingData, val)
 
     // console.log(openingData);
     var proportion = (openingData.length/data.length*100).toFixed(3)
@@ -250,7 +270,7 @@ function analyze(val) {
         .attr("fill", "currentColor")
         .attr("font-weight", "bold")
         .attr("text-anchor", "end")
-        .text("Rating"))
+        .text("Rating (Elo)"))
 
     yAxis = g => g
       .attr("transform", `translate(${margin.left},0)`)
