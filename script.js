@@ -4,10 +4,10 @@ var $status = $('#status')
 var $fen = $('#fen')
 var $pgn = $('#pgn')
 var $games = $('#games')
-var num_games = 1
 $games.html("0/0" + "  (" + "0.00" + "%)")
 var master_data = d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgoodisyourchessopening/main/2021-02-cleaned_1000000.csv", d3.autoType)
 
+var num_games = master_data.length
 var common_move = getMostCommonMove(master_data, "")
 
 $('#startBtn').on('click', function() {reset()})
@@ -24,7 +24,7 @@ function reset() {
 $('#commonBtn').on('click', function() {doMostCommon()})
 
 function doMostCommon() {
-  console.log("COMMON:", common_move, common_move.length)
+  // console.log("COMMON:", common_move, common_move.length)
   var move = game.move(common_move)
   if (move === null) {
     game.move('e5')
@@ -87,10 +87,13 @@ function updateStatus () {
 
   // game still on
   else {
-    // console.log(num_games)
+    console.log(num_games)
     prefix = "Make a move! ("
     if (num_games === 0) {
       prefix = "No Available Game Data ("
+    }
+    else if (common_move === "") {
+      prefix = "No Common Move ("
     }
 
     status = prefix + moveColor + ' to move)'
