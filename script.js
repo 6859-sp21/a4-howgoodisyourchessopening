@@ -11,6 +11,7 @@ var master_data = d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgood
 var common_move = getMostCommonMove(master_data, "")
 
 $('#startBtn').on('click', function() {reset()})
+$('#chessColor').on('change', function() {analyze(game.pgn(), this.value)})
 
 function reset() {
   // console.log("RESET!!")
@@ -66,7 +67,7 @@ function onSnapEnd () {
 }
 
 function updateStatus () {
-  analyze(game.pgn())
+  analyze(game.pgn(), document.getElementById("chessColor").value)
   var status = ''
 
   var moveColor = 'White'
@@ -111,7 +112,7 @@ function updateStatus () {
 
 function handleClick(event){
     // console.log(document.getElementById("openingMoves").value);
-    analyze(document.getElementById("openingMoves").value);
+    analyze(document.getElementById("openingMoves").value, document.getElementById("chessColor").value);
     return false;
 }
 
@@ -169,7 +170,7 @@ svg.append("rect").attr("x", 390).attr("y", 34).attr("width",20).attr("height",1
 svg.append("text").attr("x", 420).attr("y", 20).text("% Wins").style("font-size", "11px").attr("alignment-baseline","middle")
 svg.append("text").attr("x", 420).attr("y", 40).text("% Draws").style("font-size", "11px").attr("alignment-baseline","middle")
 
-function analyze(val) {
+function analyze(val, chessColor) {
   // console.log("ANALYZE");
   // d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgoodisyourchessopening/main/2021-02-cleaned_1000000.csv", d3.autoType).then(function(data) {
   master_data.then(function(data) {
@@ -185,10 +186,10 @@ function analyze(val) {
     var proportion = (openingData.length/data.length*100).toFixed(3)
 
     $games.html(String(openingData.length) + "  (" + String(proportion) + "%)")
-    var elos = new Array(openingData.length);
-    for (var i=0; i < openingData.length; i++) {
-      elos[i] = openingData[i].WhiteElo;
-    }
+    // var elos = new Array(openingData.length);
+    // for (var i=0; i < openingData.length; i++) {
+    //   elos[i] = openingData[i].WhiteElo;
+    // }
     // console.log(elos);
     // Formatting parameters
     height = 270;
@@ -210,7 +211,10 @@ function analyze(val) {
       }
       var wins = 0;
       for (var i = 0; i < d.length; i++) {
-        if (d[i].Result === "1-0") {
+        if (chessColor === 'white' && d[i].Result === "1-0") {
+          wins++;
+        }
+        if (chessColor === 'black' && d[i].Result === "0-1") {
           wins++;
         }
       }
@@ -232,10 +236,20 @@ function analyze(val) {
     }
 
     thresholds = x.ticks(20)
-    bins = d3.histogram()
-      .value(d => d.WhiteElo)
-      .domain(x.domain())
-      .thresholds(thresholds)(openingData);
+
+    if (chessColor === 'white') {
+      bins = d3.histogram()
+        .value(d => d.WhiteElo)
+        .domain(x.domain())
+        .thresholds(thresholds)(openingData);
+    }
+    else {
+      bins = d3.histogram()
+        .value(d => d.BlackElo)
+        .domain(x.domain())
+        .thresholds(thresholds)(openingData);
+    }
+
     // console.log(bins);
 
           // KDE code from https://observablehq.com/@d3/kernel-density-estimation
