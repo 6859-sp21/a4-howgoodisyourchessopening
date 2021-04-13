@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+		<meta content="utf-8" http-equiv="encoding">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="css/main.css">
+		<link rel="stylesheet" href="css/style.css">
+
+		<link rel="stylesheet"
+		      href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css"
+		      integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU"
+		      crossorigin="anonymous">
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+		        integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2"
+		        crossorigin="anonymous"></script>
+
+		<script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"
+		        integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD"
+		        crossorigin="anonymous"></script>
+
+		<script defer src="js/chess.js"></script>
+
+
+	    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+
+  	</head>
+	<body>
+		<h1>Your Check Mate</h1>
+		<h2>How Good is Your Chess Opening?</h2>
+		<h3>Check out the win/draw rate by ranking for opening chess moves from <a href="https://database.lichess.org/" target="_blank">lichess.com</a>  game data!</h3>
+		<div class="visual-container">
+			<div class="board-container">
+				<!-- <label>Status:</label> -->
+				<div id="status"></div>
+				<div id="myBoard"></div>
+				<div id='reset-button' ><button class="btn btn-primary" id="startBtn">Reset Game</button></div>
+			</div>
+			<div class="graph-container">
+				<div class="graph-title"><h4>Outcomes for Chess Opening/PGN by Rating (for White)</h4></div>
+				<div class="pgn-string">
+					<label>PGN: </label>
+					<div id="pgn"></div>
+				</div>
+				<div id='win-graph'>
+					<svg id='analysis'>
+				    	<g id='draws'></g>
+				    	<g id='wins'></g>
+				    	<g id='xAxis'></g>
+				    	<g id='yAxis'></g>
+							<g id='outlines'></g>
+							<text x="80" y="245" class='rating-description'>⇦ Amateur</text>
+							<text x="380" y="245" class='rating-description'>Expert ⇨</text>
+				    </svg>
+				</div>
+				<div class ="total-games">
+					<label>Total Games:  </label>
+					<div id="games"></div>
+				</div>
+			</div>
+		</div>
+<!-- 		<label>FEN:</label>
+		<div id="fen"></div> -->
+  	</body>
+
+	<script defer src="./script.js"></script>
+
+</html>
