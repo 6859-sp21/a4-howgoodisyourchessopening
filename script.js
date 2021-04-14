@@ -169,17 +169,7 @@ var div = d3.select("#win-graph").append("div")
 
 const colorWin = "ForestGreen";
 const colorDraw = "LightSkyBlue";
-svg = d3.select("#analysis");
-svg.append("rect")
-    .attr("x", 380).attr("y", 6).attr("width",100).attr("height",48)
-    .style("fill", "azure")
-    .style("stroke", "black")
-    .style("stroke-width", "1px")
-    .style("fill-opacity", "70%")
-svg.append("rect").attr("x", 390).attr("y", 14).attr("width",20).attr("height",13).style("fill", colorWin)
-svg.append("rect").attr("x", 390).attr("y", 34).attr("width",20).attr("height",13).style("fill", colorDraw)
-svg.append("text").attr("x", 420).attr("y", 20).text("% Wins").style("font-size", "11px").attr("alignment-baseline","middle")
-svg.append("text").attr("x", 420).attr("y", 40).text("% Draws").style("font-size", "11px").attr("alignment-baseline","middle")
+
 
 
 function analyze(val, chessColor) {
@@ -313,7 +303,7 @@ function analyze(val, chessColor) {
       .attr("y", margin.left/2)
       .attr("x", 0 - ((height-margin.bottom)/ 2))
       .attr("dy", "-0.5em")
-      .attr("font-size", 12)
+      .attr("font-size", 10)
       .style("text-anchor", "middle")
       .attr("font-weight", "bold")
       .text("Win/Draw Rate (%)");      
@@ -323,7 +313,7 @@ function analyze(val, chessColor) {
       .attr("x", (width+margin.left)/2)
       .attr("dy", "0.4em")
       .attr("dx", "-0.7em")
-      .attr("font-size", 12)
+      .attr("font-size", 10)
       .style("text-anchor", "middle")
       .attr("font-weight", "bold")
       .text("Rating (Elo)");      
@@ -411,3 +401,15 @@ var config = {
 board = Chessboard('myBoard', config)
 
 updateStatus()
+
+svg = d3.select("#analysis");
+svg.append("rect")
+    .attr("x", 380).attr("y", 6).attr("width",100).attr("height",48)
+    .style("fill", "azure")
+    .style("stroke", "black")
+    .style("stroke-width", "1px")
+    .style("fill-opacity", "70%")
+svg.append("rect").attr("x", 390).attr("y", 14).attr("width",20).attr("height",13).style("fill", colorWin)
+svg.append("rect").attr("x", 390).attr("y", 34).attr("width",20).attr("height",13).style("fill", colorDraw)
+svg.append("text").attr("x", 420).attr("y", 20).text("% Wins").style("font-size", "11px").attr("alignment-baseline","middle")
+svg.append("text").attr("x", 420).attr("y", 40).text("% Draws").style("font-size", "11px").attr("alignment-baseline","middle")
