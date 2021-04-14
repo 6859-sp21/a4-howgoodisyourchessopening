@@ -170,10 +170,17 @@ var div = d3.select("#win-graph").append("div")
 const colorWin = "ForestGreen";
 const colorDraw = "LightSkyBlue";
 svg = d3.select("#analysis");
+svg.append("rect")
+    .attr("x", 380).attr("y", 6).attr("width",100).attr("height",48)
+    .style("fill", "azure")
+    .style("stroke", "black")
+    .style("stroke-width", "1px")
+    .style("fill-opacity", "70%")
 svg.append("rect").attr("x", 390).attr("y", 14).attr("width",20).attr("height",13).style("fill", colorWin)
 svg.append("rect").attr("x", 390).attr("y", 34).attr("width",20).attr("height",13).style("fill", colorDraw)
 svg.append("text").attr("x", 420).attr("y", 20).text("% Wins").style("font-size", "11px").attr("alignment-baseline","middle")
 svg.append("text").attr("x", 420).attr("y", 40).text("% Draws").style("font-size", "11px").attr("alignment-baseline","middle")
+
 
 function analyze(val, chessColor) {
   // console.log("ANALYZE");
