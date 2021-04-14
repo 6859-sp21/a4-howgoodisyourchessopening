@@ -69,6 +69,12 @@ h3 {
     padding: 10px;
 }
 
+.divider {
+    width:5px;
+    /*height:auto;*/
+    /*display:inline-block;*/
+}
+
 .graph-container {
     max-width: 60%;
     display: flex;
@@ -97,9 +103,15 @@ h3 {
     /*justify-self: start;*/
 }
 
+.acknowledgements {
+    font-size: 12px;
+    align-self: center;
+}
+
 #pgn {
     padding-left: 5px;
 }
+
 
 .graph-title {
     display: flex;
@@ -145,4 +157,13 @@ h3 {
 .btn-header {
     font-size: 20px;
     font-weight: bold;
+}
+
+.github {
+    text-align: center;
+}
+
+.words {
+    margin: 60px;
+    font-style: bold;
 }

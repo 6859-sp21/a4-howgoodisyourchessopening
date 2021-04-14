@@ -28,22 +28,23 @@
 	<body>
 		<h1>Your Check Mate</h1>
 		<h2>How Good is Your Chess Opening? <a href="writeup.html">Writeup</a></h2>
-		<h3>Check out the win/draw rate by ranking for opening chess moves from <a href="https://database.lichess.org/" target="_blank">lichess.com</a>  game data!</h3>
+		<h3>Check out the win/draw rate by ranking for opening chess moves from <a href="https://database.lichess.org/" target="_blank">lichess.org</a>  game data!</h3>
 		<div class="visual-container">
 			<div class="board-container">
 				<!-- <label>Status:</label> -->
 				<div id="status"></div>
 				<div class="buttons-container">
 					<div id='common-button' ><button class="btn btn-primary" id="commonBtn">Most Common Move</button></div>
+					<div class='divider'></div>
 					<div id='reset-button' ><button class="btn btn-primary" id="startBtn">Reset Game</button></div>
 				</div>
 				<div id="myBoard"></div>
 				<div class="pgn-string">
-					<label>PGN: </label>
+					<label><a href="https://en.wikipedia.org/wiki/Portable_Game_Notation" target="_blank">PGN: </a></label>
 					<div id="pgn"></div>
 				</div>
-				<div>
-				Chessboard powered by <a href="https://chessboardjs.com/">chessboard.js</a> and <a href="https://github.com/jhlywa/chess.js/blob/master/README.md">chess.js</a>.
+				<div class="acknowledgements">
+					Chessboard powered by <a href="https://chessboardjs.com/">chessboard.js</a> and <a href="https://github.com/jhlywa/chess.js/blob/master/README.md">chess.js</a>.
                 </div>
 			</div>
 			<div class="graph-container">
@@ -65,7 +66,7 @@
 					<label>Total Games:  </label>
 					<div id="games"></div>
 				</div>
-				<div>
+				<div class="acknowledgements">
 				    Built following the examples in <a href="https://observablehq.com/@d3/histogram">Histogram | D3 | Observable</a>, and <a href="https://observablehq.com/@d3/stacked-bar-chart">Stacked Bar Chart | D3 | Observable</a>.
 				</div>
 			</div>
