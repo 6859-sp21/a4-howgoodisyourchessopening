@@ -11,14 +11,15 @@ h1 {
     color: #000;
     font-weight: 400;
     font-size: 60px;
-    line-height: 0.4;
+    line-height: 1;
     text-align: center;
-    padding: 1px 1px 1px 1px;
+    margin: 15px;
 }
 
 h2 {
     color: #000;
     text-align: center;
+    margin: 10px;
 }
 
 h3 {
@@ -42,24 +43,39 @@ h3 {
 }
 
 .visual-container {
+    max-width: 100vw;
     display: flex;
     justify-content: space-around;
     align-items: center;
+    overflow: auto;
 }
 
 .board-container {
+    max-width: 40%;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+/*@media screen and (max-width: 480px) {
+    .board-container {
+        width: 30%;
+    }
+*/
+.buttons-container {
+    display: flex;
+    align-items: center;
+}
 
-.graph-contatiner {
-
+.graph-container {
+    max-width: 60%;
+    display: flex;
+    flex-direction: column;
+    /*align-items: center;*/
 }
 
 .graph-title {
     font-size: 25px;
-    line-height: 0.75;
+    line-height: 0.65;
 }
 
 #myBoard {
@@ -71,7 +87,8 @@ h3 {
 .pgn-string {
     display: flex;
     /*flex-direction: column;*/
-    padding-bottom: 10px;
+    /*padding-bottom: 10px;*/
+    justify-self: start;
 }
 
 #pgn {
@@ -85,8 +102,7 @@ h3 {
 }
 
 #win-graph {
-    width: 1000px;
-    height: 500px;
+    /*width: 80%;*/
     border-style: solid;
     padding: 10px 0px 10px 0;
 }

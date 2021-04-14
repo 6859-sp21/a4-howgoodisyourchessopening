@@ -8,7 +8,8 @@ $games.html("0/0" + "  (" + "0.00" + "%)")
 var master_data = d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgoodisyourchessopening/main/2021-02-cleaned_1000000.csv", d3.autoType)
 
 var num_games = master_data.length
-var common_move = getMostCommonMove(master_data, "")
+var first_move = getMostCommonMove(master_data, "")
+var common_move = first_move
 
 $('#startBtn').on('click', function() {reset()})
 $('#chessColor').on('change', function() {analyze(game.pgn(), this.value)})
@@ -18,6 +19,7 @@ function reset() {
   game.reset()
   board.start(false)
   num_games = 1
+  common_move = first_move
   updateStatus()
 }
 
