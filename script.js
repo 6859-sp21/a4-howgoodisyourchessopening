@@ -197,7 +197,7 @@ function analyze(val, chessColor) {
     // Formatting parameters
     height = 270;
     width = 500;
-    margin = ({top: 20, right: 20, bottom: 60, left: 40});
+    margin = ({top: 20, right: 20, bottom: 60, left: 50});
 
     const svg = d3.select("#analysis")
       .attr("viewBox", [0, 0, width, height]);
@@ -286,8 +286,8 @@ function analyze(val, chessColor) {
         .attr("y", -4)
         .attr("fill", "currentColor")
         .attr("font-weight", "bold")
-        .attr("text-anchor", "end")
-        .text("Rating (Elo)"))
+        .attr("text-anchor", "end"));
+//         .text("Rating (Elo)"))
 
     yAxis = g => g
       .attr("transform", `translate(${margin.left},0)`)
@@ -296,8 +296,28 @@ function analyze(val, chessColor) {
       .call(g => g.select(".tick:last-of-type text").clone()
         .attr("x", 4)
         .attr("text-anchor", "start")
-        .attr("font-weight", "bold")
-        .text("Win/Draw Rate (%)"))
+        .attr("font-weight", "bold"));
+//         .text("Win/Draw Rate (%)"))
+    
+    svg.select("#xAxisLabel")
+      .attr("transform", "rotate(-90)")
+      .attr("y", margin.left/2)
+      .attr("x", 0 - ((height-margin.bottom)/ 2))
+      .attr("dy", "-0.5em")
+      .attr("font-size", 12)
+      .style("text-anchor", "middle")
+      .attr("font-weight", "bold")
+      .text("Win/Draw Rate (%)");      
+      
+    svg.select("#yAxisLabel")
+      .attr("y", height-margin.bottom/2)
+      .attr("x", (width+margin.left)/2)
+      .attr("dy", "0.4em")
+      .attr("dx", "-0.7em")
+      .attr("font-size", 12)
+      .style("text-anchor", "middle")
+      .attr("font-weight", "bold")
+      .text("Rating (Elo)");      
 
     wins = svg.select("#wins")
       .attr("fill", colorWin)
