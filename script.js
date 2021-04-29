@@ -11,9 +11,34 @@ var num_games = master_data.length
 var first_move = getMostCommonMove(master_data, "")
 var common_move = first_move
 
-$('#startBtn').on('click', function() {reset()})
+var low_rating = 0;
+var high_rating = 9999;
+var input_rating = false;
+var start_date = new Date("2021-02-01")
+var end_date = new Date("2021-02-28")
+
+
 $('#chessColor').on('change', function() {analyze(game.pgn(), this.value)})
 
+
+function filterByRating() {
+  low_rating = document.getElementById("input-rating-low").value;
+  high_rating = document.getElementById("input-rating-high").value;
+  // console.log(low_rating);
+  // console.log(high_rating);
+  updateStatus();
+}
+
+
+function filterByDate() {
+  start_date = new Date(document.getElementById("start-date").value);
+  end_date = new Date(document.getElementById("end-date").value);
+  updateStatus();
+} 
+
+
+
+$('#startBtn').on('click', function() {reset()})
 function reset() {
   // console.log("RESET!!")
   game.reset()
@@ -24,17 +49,15 @@ function reset() {
 }
 
 $('#commonBtn').on('click', function() {doMostCommon()})
-
 function doMostCommon() {
   // console.log("COMMON:", common_move, common_move.length)
   var move = game.move(common_move)
-  if (move === null) {
-    game.move('e5')
-  }
-  console.log(move)
+
+  //console.log(move)
   onSnapEnd()
   updateStatus()
 }
+
 
 function onDragStart (source, piece, position, orientation) {
   // do not pick up pieces if the game is over
@@ -89,7 +112,7 @@ function updateStatus () {
 
   // game still on
   else {
-    console.log(num_games)
+    //console.log(num_games)
     prefix = "Make a move! ("
     if (num_games === 0) {
       prefix = "No Available Game Data ("
@@ -122,10 +145,21 @@ function handleClick(event){
 }
 
 
-function getMostCommonMove(data, pgn) {
+function getMostCommonMove(data, pgn, low=0, high=9999) {
   var modeMap = {};
   var maxEl = data[0], maxCount = 0;
   // console.log(pgn)
+  try {
+    var date_str = data[0].Date.replace(/\./g, "-");
+    console.log(date_str)
+    var date = new Date(date_str)
+    console.log(date);
+    console.log(date >= start_date && date <= end_date);
+  } 
+  catch(e) {
+    console.log(e);
+  }
+
   for (var i=0; i < data.length; i++) {
     var move = pgn
     var offset = 0
@@ -173,12 +207,32 @@ const colorDraw = "LightSkyBlue";
 
 
 function analyze(val, chessColor) {
+  console.log(start_date)
+  console.log(end_date)
   // console.log("ANALYZE");
   // d3.tsv("https://raw.githubusercontent.com/6859-sp21/a4-howgoodisyourchessopening/main/2021-02-cleaned_1000000.csv", d3.autoType).then(function(data) {
   master_data.then(function(data) {
     // document.getElementById('main').append(val);
     // console.log(data.length)
-    var openingData = data.filter(d => d.Moves.startsWith(val));
+    var filterColor = "WhiteElo"
+    if (chessColor === 'black') {
+      filterColor = "BlackElo"
+    }
+    // var openingData = data.filter(d => d.Moves.startsWith(val));
+    var openingData = data.filter(function (d) {
+      var elo = d.WhiteElo
+      if (chessColor === 'black') {
+        elo = d.BlackElo
+      }
+      var date_dot = d.Date
+      var date_str = date_dot.replace(/\./g, "-");
+      // console.log(date_str)
+      var date = new Date(date_str)
+      // console.log(date)
+
+      return elo >= low_rating && elo <= high_rating && d.Moves.startsWith(val) && date >= start_date && date <= end_date;
+    });
+
     num_games = openingData.length
     // console.log(num_games)
 

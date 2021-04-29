@@ -29,6 +29,22 @@
 		<h1>Your Check Mate</h1>
 		<h2>How Good is Your Chess Opening? <a href="writeup.html">Writeup</a></h2>
 		<h3>Check out the win/draw rate by ranking for opening chess moves from <a href="https://database.lichess.org/" target="_blank">lichess.org</a>  game data!</h3>
+		<div class="filter-container">
+			<form>
+				<label for="input-rating">Go by Rating!</label><br>
+				<input type="number" id="input-rating-low" name="input-rating-low"><br>
+				<input type="number" id="input-rating-high" name="input-rating-high"><br>
+				<input type="button" value="Submit" onclick="filterByRating()">
+			</form> 
+			<form>
+			  <label>
+			    Go by Date
+			    <input type="date" id="start-date" name="start-date">
+			    <input type="date" id="end-date" name="end-date">
+			    <input type="button" value="Submit" onclick="filterByDate()">
+			  </label>
+			</form>
+		</div>
 		<div class="visual-container">
 			<div class="board-container">
 				<!-- <label>Status:</label> -->
