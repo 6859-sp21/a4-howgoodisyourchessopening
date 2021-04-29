@@ -1,9 +1,13 @@
 import re
+import sys
 
 bsz = 50000
 max_games = 1000000
-pgn_path = '/mnt/e/lichess-open-dataset/lichess_db_standard_rated_2021-02.pgn'
-write_path = '/mnt/e/a4-howgoodisyourchessopening/2021-02-cleaned_{}.csv'.format(max_games)
+print("Getting %d games from %d.pgn" % (max_games, sys.argv[1]))
+pgn_path = '/mnt/e/a4-howgoodisyourchessopening/' + sys.argv[1] + '.pgn'
+write_path = '/mnt/e/a4-howgoodisyourchessopening/' + sys.argv[1] + '-cleaned.csv'
+# pgn_path = '/mnt/e/lichess-open-dataset/lichess_db_standard_rated_2021-02.pgn'
+# write_path = '/mnt/e/a4-howgoodisyourchessopening/2021-02-cleaned_{}.csv'.format(max_games)
 n_moves = 4
 
 with open(pgn_path, 'r') as f, open(write_path, 'w') as g:
